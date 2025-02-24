@@ -1,9 +1,16 @@
 package com.enatbank.file_filtering.FilterFile;
 
 
+import com.enatbank.file_filtering.Config.Location;
 import com.enatbank.file_filtering.FileDetails;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cglib.core.Local;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -24,12 +31,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-
 @Service
+@AllArgsConstructor
 public class FileService {
 
-    @Value("${location}")
-    private String location;
+
+    private final Location location;
 
 
     /**********
@@ -38,7 +45,7 @@ public class FileService {
      *********/
     public ResponseEntity<Resource> openFile(String fileName) {
 
-        File file = new File(location+fileName);
+        File file = new File(location.getLocation()+fileName);
         if (!file.exists()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -62,8 +69,8 @@ public ResponseEntity<byte[]> download(String fileName) {
 
 
 
-        Path filePath = Path.of(location+fileName);
-
+        Path filePath = Path.of(location.getLocation()+fileName);
+    System.out.println("Downloading "+filePath);
         try {
             byte[] fileBytes = Files.readAllBytes(filePath);
             return ResponseEntity.ok()
@@ -75,28 +82,6 @@ public ResponseEntity<byte[]> download(String fileName) {
 
 
 
-    }
-
-/*
-*
-*  list of allfiles that found the refering folders files.
-*
- */
-    public List<FileDetails> listFile() throws IOException {
-        File folder = new File(location);
-        File[] listOfFiles = folder.listFiles();
-        List<FileDetails> fileDetailsList = new ArrayList<>();
-        for (File file : listOfFiles) {
-       Path path=Paths.get(location,file.getName());
-       FileTime fileTime = Files.getLastModifiedTime(path);
-       FileDetails fileDetails = new FileDetails();
-       // set file properties
-       fileDetails.setFileName(file.getName());
-       fileDetails.setCdate(LocalDate.from(fileTime.toInstant()));
-       fileDetails.setFileType(detectFileType(new File(location,file.getName())));
-       fileDetailsList.add(fileDetails);
-         }
-        return  fileDetailsList;
     }
 
     /*****
@@ -129,12 +114,12 @@ public ResponseEntity<byte[]> download(String fileName) {
       */
 
     public List<FileDetails> listFile(CreatedDate createdDate) throws IOException, ParseException {
-        File folder = new File(location);
+        File folder = new File(location.getLocation());
         File[] listOfFiles = folder.listFiles();
         List<FileDetails> fileDetailsList = new ArrayList<>();
         List<String> fileList = new ArrayList<>();
         for (File file : listOfFiles) {
-            Path path=Paths.get(location,file.getName());
+            Path path=Paths.get(location.getLocation(),file.getName());
             FileTime fileTime = Files.getLastModifiedTime(path);
             LocalDate dateOfCreated=fileTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -148,7 +133,7 @@ public ResponseEntity<byte[]> download(String fileName) {
                 // set file properties
                 fileDetails.setFileName(file.getName());
                 fileDetails.setCdate(dateOfCreated);
-                fileDetails.setFileType(detectFileType(new File(location,file.getName())));
+                fileDetails.setFileType(detectFileType(new File(location.getLocation(),file.getName())));
                 fileDetailsList.add(fileDetails);
             }
 

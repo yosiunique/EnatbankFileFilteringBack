@@ -1,0 +1,23 @@
+
+spring:
+    security:
+        oauth2:
+          resourceserver:
+                  jwt:
+                    issuer-uri: http://10.1.22.72:8081/realms/enat
+
+provider:
+    keycloak:
+      ssl-info:
+        enabled: false
+      issuer-uri: http://10.1.22.72:8081/realms/enat
+
+client:
+  hr:
+    baseUrl: http://10.1.22.72:8083/hr
+application:
+     allowedOrigin:
+      - 'http://localhost:4200'
+
+storage:
+   location: /home/yoseph/Desktop/fmf
