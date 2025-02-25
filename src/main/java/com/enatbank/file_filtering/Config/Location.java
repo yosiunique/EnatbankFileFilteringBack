@@ -9,6 +9,12 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 public class Location {
-    private String location;
+    private String smbServer ;
+    private  String shareName ;
+    private String folderPath ;
+    private   String username ;
+    private   String password ;
+    private String domain ;                  // Leave empty if not using a domain
+
 
 }

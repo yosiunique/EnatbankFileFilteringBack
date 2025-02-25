@@ -1,3 +1,29 @@
-#
-#          #Folder path= \\10.1.12.76\EnatSystemBKPs\kyc
-# location: "\\\\10.1.12.76\\EnatSystemBKPs\\kyc"
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.1.12.70:8081/auth/realms/enat
+
+provider:
+  keycloak:
+    ssl-info:
+      enabled: false
+    issuer-uri: http://10.1.12.70:8081/auth/realms/enat
+
+client:
+  hr:
+    baseUrl: http://10.1.12.70:8083/hr
+application:
+  allowedOrigin:
+    - 'http://localhost:4200'
+
+storage:
+  smbServer : 10.1.12.76
+  hareName : enatsystembkps
+  folderPath : kyc
+  username : YGetachew
+  password: yosi4321@A
+  domain: enat
+

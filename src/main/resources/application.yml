@@ -20,4 +20,10 @@ application:
       - 'http://localhost:4200'
 
 storage:
-   location: /home/yoseph/Desktop/fmf
+   smbServer : 10.1.12.76
+   hareName : enatsystembkps
+   folderPath : kyc
+   username : YGetachew
+   password: yosi4321@A
+   domain: enat
+

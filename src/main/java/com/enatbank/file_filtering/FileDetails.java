@@ -15,6 +15,4 @@ public class FileDetails {
     private String fileName;
     private LocalDate cdate;
     private String fileType;
-
-
 }
