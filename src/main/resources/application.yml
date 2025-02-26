@@ -21,7 +21,7 @@ application:
 
 storage:
    smbServer : 10.1.12.76
-   hareName : enatsystembkps
+   shareName : enatsystembkps
    folderPath : kyc
    username : YGetachew
    password: yosi4321@A
